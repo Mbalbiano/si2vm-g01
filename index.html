@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Endosos y anulaciones · Aseguradora Pampa (G01)</title>
+<style>
+  :root { --bg:#f3f5f7; --panel:#fff; --ink:#1d2733; --mute:#5b6775; --line:#d5dbe2; --accent:#1f5f8b; --ok:#1d6b3a; --bad:#9b2226; --warn:#8a5a00; --warnbg:#fff4d6; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.45 "Segoe UI", system-ui, sans-serif; background:var(--bg); color:var(--ink); }
+  header { background:var(--accent); color:#fff; padding:14px 24px; }
+  header h1 { margin:0; font-size:20px; font-weight:600; }
+  header p { margin:2px 0 0; font-size:13px; opacity:.9; }
+  main { max-width:1000px; margin:0 auto; padding:20px; display:grid; gap:18px; }
+  section { background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:16px 18px; }
+  h2 { margin:0 0 10px; font-size:17px; }
+  label { display:inline-flex; flex-direction:column; font-size:13px; color:var(--mute); gap:3px; margin:0 12px 10px 0; }
+  select, input, button { font:inherit; padding:6px 8px; border:1px solid var(--line); border-radius:4px; background:#fff; color:var(--ink); }
+  input[type=text] { min-width:220px; }
+  button { cursor:pointer; background:var(--accent); color:#fff; border-color:var(--accent); }
+  button.danger { background:var(--bad); border-color:var(--bad); }
+  button:focus-visible, select:focus-visible, input:focus-visible { outline:3px solid #f2b705; outline-offset:1px; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th, td { text-align:left; padding:7px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--mute); font-weight:600; }
+  .wrap { overflow-x:auto; }
+  .msg { margin:8px 0 0; padding:8px 10px; border-radius:4px; font-size:14px; min-height:20px; }
+  .msg.ok { background:#e5f4ea; color:var(--ok); }
+  .msg.err { background:#fbe7e8; color:var(--bad); }
+  .msg.info { background:var(--warnbg); color:var(--warn); }
+  .tag { display:inline-block; padding:1px 8px; border-radius:10px; font-size:12px; border:1px solid var(--line); }
+  .tag.vig { color:var(--ok); border-color:var(--ok); }
+  .tag.anu { color:var(--bad); border-color:var(--bad); }
+  .rule { color:var(--bad); font-size:13px; }
+  .pend { background:var(--warnbg); border:1px solid #e8cf8a; color:var(--warn); font-size:14px; }
+  .pend ul { margin:6px 0 0; padding-left:20px; }
+  .note { color:var(--mute); font-size:13px; margin:8px 0 0; }
+  .warnline { color:var(--warn); font-size:12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Endosos y anulaciones</h1>
+  <p>Aseguradora Pampa · Grupo G01 · Página E3 generada desde la especificación (RF-01, RF-03, RF-04, RF-09, RF-10)</p>
+</header>
+<main>
+
+  <section id="uc01">
+    <h2>Endosos y modificaciones (UC-01 Aplicar endoso)</h2>
+    <label>Póliza (UC-03 Seleccionar póliza)
+      <select id="endPoliza"></select>
+    </label>
+    <label>Tipo de modificación
+      <select id="endTipo">
+        <option>Cambio de domicilio</option>
+        <option>Cambio de forma de pago</option>
+      </select>
+    </label>
+    <label>Detalle (opcional)
+      <input type="text" id="endDetalle" placeholder="Sin detalle">
+      <span class="warnline">Pendiente de confirmar con Gerencia Técnica (RF-06): hoy no se exige ni se prohíbe.</span>
+    </label>
+    <label>Usuario
+      <input type="text" id="endUsuario" value="HECTOR.V">
+    </label>
+    <div><button id="btnAplicar" type="button">Aplicar</button></div>
+    <div id="msgEndoso" class="msg" role="status" aria-live="polite"></div>
+    <p class="note">La fecha y la hora del endoso las toma el sistema al aplicarlo.</p>
+  </section>
+
+  <section id="uc02">
+    <h2>Cobranza y estado de cuenta (UC-02 Anular póliza)</h2>
+    <div class="wrap">
+      <table>
+        <thead><tr><th>Póliza</th><th>Tomador</th><th>Dominio</th><th>Vigencia hasta</th><th>Estado de pago</th><th>Acción</th></tr></thead>
+        <tbody id="tbPolizas"></tbody>
+      </table>
+    </div>
+    <div id="msgAnular" class="msg" role="status" aria-live="polite"></div>
+  </section>
+
+  <section id="registrados">
+    <h2>Endosos registrados</h2>
+    <div class="wrap">
+      <table>
+        <thead><tr><th>Póliza</th><th>Tipo</th><th>Fecha y hora</th><th>Usuario</th><th>Detalle</th></tr></thead>
+        <tbody id="tbEndosos"></tbody>
+      </table>
+    </div>
+    <p id="vacio" class="note">Todavía no hay endosos registrados.</p>
+  </section>
+
+  <section class="pend">
+    <strong>Pendiente de decisión: no implementado</strong>
+    <ul>
+      <li>RF-02 · Cantidad de endosos de una póliza (Gerencia Técnica).</li>
+      <li>RF-05 · Registrar quién solicita (Gerencia Técnica).</li>
+      <li>RF-06 · Exigir el detalle del endoso (Gerencia Técnica).</li>
+      <li>RF-07 · Constancia de endoso o anulación (Gerencia Técnica; H. Vidal confirma).</li>
+      <li>RF-08 · Aviso a Emisión de pólizas (A. Pampín).</li>
+      <li>RF-11 y RF-12 · Endoso de cambio de vehículo y de cobertura (Gerencia Técnica).</li>
+      <li>RF-03 · Qué es «vigente» si la vigencia ya venció (Gerencia Técnica).</li>
+      <li>UC-01, flujo 2a · Endosar una póliza anulada (Gerencia Técnica).</li>
+    </ul>
+  </section>
+
+</main>
+
+<script>
+// Datos en memoria, con las pólizas que usan los criterios de la 3.2
+var polizas = [
+  { nro: "AU-222410", tomador: "Gómez, María Elena", dominio: "AB 412 KL", vigencia: "30/08/2027", estado: "Al dia" },
+  { nro: "AU-228696", tomador: "Gómez, María Elena", dominio: "AB 412 KL", vigencia: "30/08/2027", estado: "Al dia" },
+  { nro: "AU-203523", tomador: "Gómez, María Elena", dominio: "AB 412 KL", vigencia: "sin dato", estado: "Al dia" },
+  { nro: "AU-201674", tomador: "Gómez, María Elena", dominio: "AB 412 KL", vigencia: "31/08/2027", estado: "Al dia" },
+  { nro: "AU-203611", tomador: "Gómez, María Elena", dominio: "AB 412 KL", vigencia: "31/08/2027", estado: "Al dia" },
+  { nro: "AU-119887", tomador: "Pérez, Silvia",       dominio: "AE 552 QQ", vigencia: "sin dato", estado: "Anulada" }
+];
+var endosos = [];
+
+function $(id) { return document.getElementById(id); }
+function pad(n) { return (n < 10 ? "0" : "") + n; }
+function ahora() {
+  var d = new Date();
+  return pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + "/" + d.getFullYear() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+}
+function buscar(nro) { return polizas.filter(function (p) { return p.nro === nro; })[0]; }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+function mensaje(id, tipo, texto) { var e = $(id); e.className = "msg " + tipo; e.textContent = texto; }
+
+function render() {
+  var sel = $("endPoliza"), actual = sel.value;
+  sel.innerHTML = polizas.map(function (p) {
+    return '<option value="' + p.nro + '">' + p.nro + " · " + p.estado + "</option>";
+  }).join("");
+  if (actual) sel.value = actual;
+
+  $("tbPolizas").innerHTML = polizas.map(function (p) {
+    var accion = p.estado !== "Anulada"
+      ? '<button type="button" class="danger" data-anular="' + p.nro + '">Anular</button>'
+      : '<span class="rule">RF-04: una póliza anulada no se puede anular de nuevo.</span>';
+    var cls = p.estado === "Anulada" ? "anu" : "vig";
+    return "<tr><td>" + p.nro + "</td><td>" + esc(p.tomador) + "</td><td>" + p.dominio + "</td><td>" + p.vigencia +
+      '</td><td><span class="tag ' + cls + '">' + p.estado + "</span></td><td>" + accion + "</td></tr>";
+  }).join("");
+
+  $("tbEndosos").innerHTML = endosos.slice().reverse().map(function (e) {
+    return "<tr><td>" + e.poliza + "</td><td>" + esc(e.tipo) + "</td><td>" + e.fecha + "</td><td>" + esc(e.usuario) + "</td><td>" + (e.detalle ? esc(e.detalle) : "<em>sin detalle</em>") + "</td></tr>";
+  }).join("");
+  $("vacio").style.display = endosos.length ? "none" : "block";
+}
+
+// UC-01 Aplicar endoso (RF-01, RF-09, RF-10)
+function aplicarEndoso() {
+  var p = buscar($("endPoliza").value);
+  var usuario = $("endUsuario").value.trim();
+  if (p.estado === "Anulada") {
+    mensaje("msgEndoso", "info", "No se aplicó: endosar una póliza anulada está pendiente de decisión (UC-01, flujo 2a). RF-09 y RF-10 hablan de pólizas vigentes.");
+    return;
+  }
+  if (!usuario) { mensaje("msgEndoso", "err", "Falta el usuario que aplica el endoso (RF-01)."); return; }
+  var tipo = $("endTipo").value;
+  endosos.push({ poliza: p.nro, tipo: tipo, fecha: ahora(), usuario: usuario, detalle: $("endDetalle").value.trim() });
+  mensaje("msgEndoso", "ok", "Endoso aceptado: " + tipo + " en " + p.nro + " (" + (tipo === "Cambio de domicilio" ? "RF-09" : "RF-10") + "). La póliza sigue «" + p.estado + "».");
+  $("endDetalle").value = "";
+  render();
+}
+
+// UC-02 Anular póliza (RF-03, RF-04)
+function anular(nro) {
+  var p = buscar(nro);
+  if (p.estado === "Anulada") {
+    mensaje("msgAnular", "err", "Rechazado por RF-04: " + nro + " ya está anulada.");
+    return;
+  }
+  p.estado = "Anulada";
+  mensaje("msgAnular", "ok", nro + " pasó a Anulada (RF-03).");
+  render();
+}
+
+$("btnAplicar").addEventListener("click", aplicarEndoso);
+$("tbPolizas").addEventListener("click", function (ev) {
+  var nro = ev.target.getAttribute && ev.target.getAttribute("data-anular");
+  if (nro) anular(nro);
+});
+
+render();
+</script>
+</body>
+</html>
