@@ -1,8 +1,4 @@
-# specs/use-cases.md
 
-*Nota: Solo cambia UC-01 Aplicar endoso; UC-02, UC-03 y UC-04 no cambian. El archivo completo se entregó como use-cases.md.*
-
----
 
 ## UC-01: Aplicar endoso
 
