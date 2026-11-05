@@ -41,10 +41,3 @@ La página v2 se regeneró desde la especificación actualizada y pasa los 9 cri
 | **RF-12** | AU-240117 | Aceptado, registrado como «Cambio de cobertura», mismo número y vigencia | Sí |
 | **RF-14 · A (con $50.000.000)** | AU-240116 | Rechazado; no se registra (5 filas antes y después) | Sí |
 
----
-
-## Observaciones de implementación y agente
-
-* **Qué cambió de v1 a v2:** El desplegable pasa de 2 a 4 tipos; aparece el campo «Valor del vehículo nuevo» solo con «Cambio de vehículo»; el endoso aceptado informa que la póliza conserva número y vigencia; el panel de pendientes suma RF-13, RF-14 (antigüedad), RF-15 y conductor habitual/suma asegurada, y quita RF-11 y RF-12.
-* **Lo que la página no pudo hacer, y por qué:** No calcula el premio (RF-13) ni la diferencia: la especificación no dice de dónde salen la tarifa ni los datos de riesgo. No controla la antigüedad: falta su valor. Solo pide el valor del vehículo nuevo: ningún requerimiento dice qué otros datos se cargan.
-* **Aclaración sobre el agente:** La v2 la generó Claude (Sonnet 5.5) en esta sesión con el mismo prompt de la 3.3 más la línea del cambio. La v1 se hizo en claude.ai: si quieren registrar exactamente el mismo entorno, pueden repetir el prompt allí.
